@@ -3,23 +3,35 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#864cbf',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#45a3e5',
     },
     error: {
-      main: '#f44336',
+      main: '#ff3355',
     },
   },
   typography: {
     fontFamily: 'Arial, sans-serif',
     h1: {
-      fontSize: '4rem',
+      fontSize: '2.5rem',
       fontWeight: 700,
     },
     h2: {
-      fontSize: '3rem',
+      fontSize: '2rem',
+    },
+    h3: {
+      fontSize: '1.75rem',
+    },
+    h4: {
+      fontSize: '1.5rem',
+    },
+    h5: {
+      fontSize: '1.25rem',
+    },
+    h6: {
+      fontSize: '1rem',
     },
   },
   spacing: 8,
