@@ -5,7 +5,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <div>Home</div>
-      <Link to="/components">Components</Link>
+      <Link to="/components">ComponentShowCasePage</Link>
     </div>
   );
 };
