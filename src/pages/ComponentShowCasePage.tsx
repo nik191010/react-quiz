@@ -7,10 +7,6 @@ import {
   Grid2,
   Button,
   Box,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
   TextField,
   FormControlLabel,
   Checkbox,
@@ -22,17 +18,16 @@ import {
   MenuItem,
   FormControl,
   IconButton,
+  FormGroup,
+  SelectChangeEvent,
 } from '@mui/material';
 import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import QuizIcon from '@mui/icons-material/Quiz';
-import { PhotoCamera } from '@mui/icons-material';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import Menu from '@mui/material/Menu';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -51,6 +46,12 @@ const Component_1: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const [selectedOption, setSelectedOption] = useState<string>('option1'); // Default value with type
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectedOption(event.target.value);
+  };
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', width: '250px' }}>
       <IconButton
@@ -64,7 +65,8 @@ const Component_1: React.FC = () => {
             backgroundColor: 'transparent',
             color: '#3498db',
           },
-        }}>
+        }}
+      >
         <CloseIcon />
       </IconButton>
       <List sx={{ marginTop: '30px' }}>
@@ -80,7 +82,8 @@ const Component_1: React.FC = () => {
                   backgroundColor: 'transparent',
                   color: '#3498db',
                 },
-              }}>
+              }}
+            >
               <ListItemText primary={page.name} />
             </ListItemButton>
           </ListItem>
@@ -95,7 +98,13 @@ const Component_1: React.FC = () => {
       <AppBar position="fixed">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' }, alignItems: 'center' }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'flex', md: 'flex' },
+                alignItems: 'center',
+              }}
+            >
               <Link component={RouterLink} to="/">
                 <QuizIcon sx={{ color: '#fff', fontSize: '2rem' }} />
               </Link>
@@ -107,14 +116,16 @@ const Component_1: React.FC = () => {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleDrawerToggle}
-                color="inherit">
+                color="inherit"
+              >
                 <MenuIcon />
               </IconButton>
               <Drawer
                 anchor="right"
                 open={mobileOpen}
                 onClose={handleDrawerToggle}
-                sx={{ display: { xs: 'block', md: 'none' } }}>
+                sx={{ display: { xs: 'block', md: 'none' } }}
+              >
                 {drawer}
               </Drawer>
             </Box>
@@ -132,7 +143,8 @@ const Component_1: React.FC = () => {
                       '&:hover': {
                         color: '#3498db',
                       },
-                    }}>
+                    }}
+                  >
                     {page.name}
                   </Button>
                 </Link>
@@ -141,173 +153,400 @@ const Component_1: React.FC = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container sx={{ marginTop: '8rem' }} maxWidth="md">
+      <Container sx={{ marginTop: '8rem', textAlign: 'center' }} maxWidth="md">
         <Box sx={{ margin: '40px 0' }}>
-          <Grid2 container spacing={2} justifyContent="center">
-            <Grid2 size={{ xs: 6 }}>
+          <Grid2 container spacing={2} sx={{ width: '100%' }}>
+            <Grid2
+              size={{ xs: 12 }}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+                textAlign: 'left',
+                width: '400px',
+                maxWidth: '100%',
+                margin: '0 auto 1rem',
+              }}
+            >
+              <Typography variant="h1" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 1
+              </Typography>
+              <Typography variant="h2" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 2
+              </Typography>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 3
+              </Typography>
+              <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 4
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 5
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+                Heading 6
+              </Typography>
+
+              <Typography sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} variant="body1">
+                Primary body text
+              </Typography>
+
+              <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }} variant="body2">
+                Secondary body text
+              </Typography>
+
+              <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }} variant="caption">
+                Tertiary body text
+              </Typography>
+            </Grid2>
+            <Grid2
+              size={{ xs: 12 }}
+              sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+            >
+              <Button
+                variant="text"
+                sx={{
+                  backgroundColor: '#dbbb1c',
+                  color: '#000',
+                  padding: '7px 0',
+                  textTransform: 'none',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '220px',
+                  maxWidth: '100%',
+                  marginRight: '20px',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    opacity: '.8',
+                  },
+                }}
+              >
+                Primary
+              </Button>
+
               <Button
                 variant="text"
                 sx={{
                   backgroundColor: '#5E35B2',
                   color: '#fff',
-                  padding: '12px 40px',
+                  padding: '7px 0',
                   textTransform: 'none',
-                  fontSize: '1.2rem',
-                  '&:focus': {
-                    outline: 'none',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#4e306b',
-                  },
-                }}>
-                Primary button
-              </Button>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <Button
-                variant="text"
-                sx={{
-                  backgroundColor: '#5E35B2',
-                  color: '#fff',
-                  padding: '12px 0',
-                  textTransform: 'none',
-                  fontSize: '1.2rem',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
                   width: '220px',
                   maxWidth: '100%',
-                  '&:focus': {
-                    outline: 'none',
-                  },
+                  marginRight: '20px',
+                  transition: 'all .5s ease',
                   '&:hover': {
-                    backgroundColor: '#4e306b',
+                    opacity: '.8',
                   },
-                }}>
-                Primary button
+                }}
+              >
+                Secondary
               </Button>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <Button
-                variant="text"
-                sx={{
-                  backgroundColor: '#2ecc71',
-                  color: '#fff',
-                  padding: '12px 40px',
-                  textTransform: 'none',
-                  fontSize: '1.2rem',
-                  '&:focus': {
-                    outline: 'none',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#58D68D',
-                  },
-                }}>
-                Secondary button
-              </Button>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <Button
-                variant="text"
-                sx={{
-                  backgroundColor: '#2ecc71',
-                  color: '#fff',
-                  padding: '12px 0',
-                  textTransform: 'none',
-                  fontSize: '1.2rem',
-                  width: '220px',
-                  maxWidth: '100%',
-                  '&:focus': {
-                    outline: 'none',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#58D68D',
-                  },
-                }}>
-                Secondary button
-              </Button>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
+
               <Button
                 variant="outlined"
                 sx={{
                   backgroundColor: '#e74c3c',
                   color: '#fff',
-                  padding: '12px 40px',
+                  padding: '7px 0',
                   textTransform: 'none',
-                  fontSize: '1.2rem',
-                }}>
-                Oulined button
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '220px',
+                  maxWidth: '100%',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    opacity: '.8',
+                  },
+                }}
+              >
+                Danger
               </Button>
             </Grid2>
-            <Grid2 size={{ xs: 6 }}>
+            <Grid2
+              size={{ xs: 12 }}
+              sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+            >
               <Button
                 variant="outlined"
                 sx={{
-                  backgroundColor: '#e74c3c',
-                  color: '#fff',
-                  padding: '12px 0',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #dbbb1c',
+                  color: '#dbbb1c',
+                  padding: '7px 0',
                   textTransform: 'none',
-                  fontSize: '1.2rem',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
                   width: '220px',
                   maxWidth: '100%',
-                }}>
-                Oulined button
+                  marginRight: '20px',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    backgroundColor: '#dbbb1c',
+                    color: '#fff',
+                  },
+                }}
+              >
+                Primary Outline
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid #5E35B2',
+                  color: '#5E35B2',
+                  padding: '7px 0',
+                  textTransform: 'none',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '220px',
+                  maxWidth: '100%',
+                  marginRight: '20px',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    backgroundColor: '#5E35B2',
+                    color: '#fff',
+                  },
+                }}
+              >
+                Secondary Outline
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  backgroundColor: 'transparent',
+                  color: '#e74c3c',
+                  border: '1px solid #e74c3c',
+                  padding: '7px 0',
+                  textTransform: 'none',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '220px',
+                  maxWidth: '100%',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    backgroundColor: '#e74c3c',
+                    color: '#fff',
+                  },
+                }}
+              >
+                Danger Outline
               </Button>
             </Grid2>
           </Grid2>
         </Box>
 
-        <Typography variant="h1">Heading 1</Typography>
-        <Typography variant="h2">Heading 2</Typography>
-        <Typography variant="h3">Heading 3</Typography>
-        <Typography variant="h4">Heading 4</Typography>
-        <Typography variant="h5">Heading 5</Typography>
-        <Typography variant="h6">Heading 6</Typography>
+        <Box
+          sx={{
+            width: '300px',
+            maxWidth: '100%',
+            border: '1px solid #dbbb1c',
+            margin: '0 auto',
+            marginBottom: '2rem',
+            borderRadius: '5px',
+          }}
+        >
+          <form>
+            <Box sx={{ padding: '20px' }}>
+              <Typography
+                variant="h2"
+                sx={{ fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'left' }}
+              >
+                Form
+              </Typography>
+              <FormControl sx={{ width: '100%' }}>
+                <TextField
+                  label="Text Input"
+                  helperText="A helpful text"
+                  error={false}
+                  variant="outlined"
+                  sx={{
+                    marginBottom: '1.2rem',
+                    '& .MuiFormHelperText-root': {
+                      color: '#000',
+                      fontSize: '0.8rem',
+                      marginTop: '0',
+                      marginLeft: '0',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#dbbb1c',
+                        borderWidth: '2px',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#5E35B2',
+                        borderWidth: '2px',
+                      },
+                    },
+                  }}
+                />
+              </FormControl>
+              <FormControl sx={{ width: '100%' }}>
+                <TextField
+                  label="Number Input"
+                  type="number"
+                  // helperText="Enter a number"
+                  error={false}
+                  variant="outlined"
+                  // defaultValue={0}
+                  sx={{
+                    marginBottom: '1.2rem',
+                    '& .MuiFormHelperText-root': {
+                      color: '#000',
+                      fontSize: '0.8rem',
+                      marginTop: '0',
+                      marginLeft: '0',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#dbbb1c',
+                        borderWidth: '2px',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#5E35B2',
+                        borderWidth: '2px',
+                      },
+                    },
+                  }}
+                />
+              </FormControl>
+              <FormGroup>
+                <FormLabel sx={{ fontWeight: 'bold', textAlign: 'left', fontSize: '1.2rem' }}>
+                  Checkbox buttons
+                </FormLabel>
+                <FormControlLabel
+                  sx={{ fontWeight: 'bold' }}
+                  control={<Checkbox />}
+                  label="Option 1"
+                />
+                <FormControlLabel
+                  sx={{ fontWeight: 'bold' }}
+                  control={<Checkbox />}
+                  label="Option 2"
+                />
+              </FormGroup>
+              <RadioGroup sx={{ marginBottom: '1rem' }}>
+                <FormLabel
+                  sx={{
+                    fontWeight: 'bold',
+                    textAlign: 'left',
+                    fontSize: '1.2rem',
+                  }}
+                >
+                  Radio buttons
+                </FormLabel>
+                <FormControlLabel
+                  sx={{ fontWeight: 'bold' }}
+                  value="option1"
+                  control={<Radio />}
+                  label="Radio 1"
+                />
+                <FormControlLabel
+                  sx={{ fontWeight: 'bold' }}
+                  value="option2"
+                  control={<Radio />}
+                  label="Radio 2"
+                />
+              </RadioGroup>
+              <FormControl
+                sx={{
+                  width: '100%',
+                  textAlign: 'left',
+                  marginBottom: '1rem',
+                }}
+              >
+                <InputLabel
+                  sx={{
+                    marginTop: '-10px',
+                    marginLeft: '-10px',
+                    fontSize: '1.2rem',
+                    color: '#000',
+                  }}
+                >
+                  Select
+                </InputLabel>
+                <Select
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#dbbb1c',
+                    },
+                  }}
+                  value={selectedOption}
+                  onChange={handleChange}
+                >
+                  <MenuItem sx={{ fontWeight: 'bold' }} value="option1">
+                    Option 1
+                  </MenuItem>
+                  <MenuItem sx={{ fontWeight: 'bold' }} value="option2">
+                    Option 2
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                sx={{
+                  backgroundColor: '#dbbb1c',
+                  color: '#000',
+                  padding: '7px 0',
+                  textTransform: 'none',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '100%',
+                  maxWidth: '100%',
+                  marginRight: '20px',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    opacity: '.8',
+                  },
+                }}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Box>
+          </form>
+        </Box>
 
-        <Typography sx={{ fontSize: '1.4rem' }} variant="body1">
-          This is the primary paragraph text.
-        </Typography>
-
-        <Typography sx={{ fontSize: '1.2rem' }} variant="body2">
-          This is the secondary paragraph text.
-        </Typography>
-
-        <Typography sx={{ fontSize: '1rem', display: 'block' }} variant="caption">
-          This is a help text or tooltip.
-        </Typography>
-
-        <TextField
-          sx={{ display: 'block' }}
-          label="Text Input"
-          helperText="This is help text"
-          error={false} // Set to true to show error styling
+        <Button
           variant="outlined"
-        />
-        <TextField
-          sx={{ display: 'block' }}
-          label="Number Input"
-          type="number"
-          helperText="Enter a number"
-          error={false}
-          variant="outlined"
-        />
-        <FormControlLabel control={<Checkbox />} label="Accept terms and conditions" />
-        <RadioGroup>
-          <FormLabel>Choose an option</FormLabel>
-          <FormControlLabel value="option1" control={<Radio />} label="Option 1" />
-          <FormControlLabel value="option2" control={<Radio />} label="Option 2" />
-        </RadioGroup>
-        <FormControl sx={{ width: '200px', maxWidth: '100%' }}>
-          <InputLabel>Choose an option</InputLabel>
-          <Select>
-            <MenuItem value="option1">Option 1</MenuItem>
-            <MenuItem value="option2">Option 2</MenuItem>
-          </Select>
-        </FormControl>
+          component={RouterLink}
+          to="/"
+          sx={{
+            backgroundColor: 'transparent',
+            border: '1px solid #5E35B2',
+            color: '#5E35B2',
+            padding: '7px 0',
+            textTransform: 'none',
+            fontSize: '1.4rem',
+            fontWeight: 'bold',
+            width: '220px',
+            maxWidth: '100%',
+            marginRight: '20px',
+            marginBottom: '1rem',
+            transition: 'all .5s ease',
+            '&:hover': {
+              backgroundColor: '#5E35B2',
+              color: '#fff',
+            },
+          }}
+        >
+          Home
+        </Button>
       </Container>
 
       <Box component="footer" sx={{ bgcolor: '#333', py: 4 }}>
         <Container
           maxWidth="md"
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Link component={RouterLink} to="/">
             <QuizIcon sx={{ color: '#fff', fontSize: '1.7rem' }} />
           </Link>
@@ -323,85 +562,14 @@ const Component_1: React.FC = () => {
                   color: '#3498db',
                   transition: 'all .5s ease',
                 },
-              }}>
+              }}
+            >
               © QuizApp,
             </Link>{' '}
             {new Date().getFullYear()}
           </Typography>
         </Container>
       </Box>
-
-      {/* <AppBar position="relative">
-        <Toolbar>
-          <PhotoCamera sx={{ marginRight: '20px' }} />
-          <Typography variant="h6">Photo Album</Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <Box sx={{ backgroundColor: '#fff', padding: '64px 0 48px' }}>
-          <Container maxWidth="sm">
-            <Typography variant="h2" align="center" color="textPrimary" gutterBottom>
-              Photo Album
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" display="block">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere natus error, adipisci
-              velit optio sequi asperiores illum! Tenetur deserunt mollitia illo maiores! Minima
-              perspiciatis quos esse alias fugit dolor rerum!
-            </Typography>
-            <Box sx={{ marginTop: '40px' }}>
-              <Grid2 container spacing={2} justifyContent="center">
-                <Grid2>
-                  <Button variant="contained" color="primary">
-                    See my photos
-                  </Button>
-                </Grid2>
-                <Grid2>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid2>
-              </Grid2>
-            </Box>
-          </Container>
-        </Box>
-        <Container maxWidth="md" sx={{ padding: '20px' }}>
-          <Grid2 container spacing={4}>
-            {cards.map((card) => (
-              <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={card}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardMedia
-                    sx={{ paddingTop: '56.25%' }}
-                    image="https://picsum.photos/600/400"
-                    title="image title"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5">
-                      Heading
-                    </Typography>
-                    <Typography>This is a media card.</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      View
-                    </Button>
-                    <Button size="small" color="primary">
-                      Edit
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid2>
-            ))}
-          </Grid2>
-        </Container>
-      </main>
-      <Box component="footer" sx={{ backgroundColor: '#fff', padding: '50px 0' }}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Something here to give the footer a purpose!
-        </Typography>
-      </Box> */}
     </>
   );
 };
