@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import Home from './pages/Home';
 import ComponentShowCasePage from './pages/ComponentShowCasePage';
+import CreateQuizPage from './pages/CreateQuizPage';
 
 const App: React.FC = () => (
   <ThemeProvider theme={theme}>
@@ -11,6 +12,7 @@ const App: React.FC = () => (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/components" element={<ComponentShowCasePage />} />
+        <Route path="/create" element={<CreateQuizPage />} />
       </Routes>
     </Router>
   </ThemeProvider>
