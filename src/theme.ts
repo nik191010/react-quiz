@@ -161,6 +161,23 @@ const theme = createTheme({
         },
       ],
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.2rem',
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#dbbb1c',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'none',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#dbbb1c',
+            borderWidth: '3px',
+          },
+        },
+      },
+    },
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -191,7 +208,7 @@ const theme = createTheme({
       // Moved FormGroup styles here
       styleOverrides: {
         root: {
-          marginBottom: '1rem',
+          // marginBottom: '1rem',
         },
       },
     },
@@ -200,6 +217,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           // fontWeight: 'bold',
+          color: '#dbbb1c',
           textAlign: 'left',
           fontSize: '1.2rem',
         },
@@ -209,6 +227,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 'bold',
+          '& .MuiTypography-root': {
+            fontSize: '1.1rem',
+          },
         },
       },
     },
@@ -227,7 +248,10 @@ const theme = createTheme({
           // marginTop: '-10px',
           // marginLeft: '-10px',
           fontSize: '1.2rem',
-          color: '#000',
+          color: 'gray',
+          '&.Mui-focused': {
+            color: '#dbbb1c', // Label color when focused
+          },
         },
       },
     },
