@@ -1,33 +1,111 @@
 import React, { useState } from 'react';
-import Layout from '../components/Layout';
 import {
-  Box,
-  Button,
   Container,
-  FormControl,
-  List,
-  ListItem,
-  TextField,
+  Box,
   Typography,
+  TextField,
+  Button,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
+import Layout from '../components/Layout';
+
+interface Answer {
+  id: number;
+  text: string;
+  correct: boolean;
+}
+
+interface Question {
+  title?: string;
+  id: number;
+  text: string;
+  draft: boolean;
+  answers: Answer[];
+}
 
 const CreateQuizPage: React.FC = () => {
-  const [title, setTitle] = useState<string>('');
-  const [questions, setQuestions] = useState<string[]>(['Question 1']);
-  const [count, setCount] = useState<number>(2);
+  // const [quizTitle, setQuizTitle] = useState<string>('');
+  const [questions, setQuestions] = useState<Question[]>([
+    { title: '', id: 1, text: '', draft: false, answers: [{ id: 1, text: '', correct: false }] },
+  ]);
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  // };
-
+  // Handle quiz title change
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-    console.log(title);
+    setQuestions(
+      (prev) => prev.map((q) => ({ ...q, title: e.target.value })), // Use event.target.checked
+    );
   };
-  const handleQuestions = () => {
-    setCount(count + 1);
-    setQuestions((t) => [...t, `Question ${count}`]);
-    console.log(questions);
+
+  // Handle question text change
+  const handleQuestionChange = (qIndex: number, value: string) => {
+    setQuestions((prev) => prev.map((q, i) => (i === qIndex ? { ...q, text: value } : q)));
+  };
+
+  // Handle answer text change
+  const handleAnswerChange = (qIndex: number, aIndex: number, value: string) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i === qIndex
+          ? {
+              ...q,
+              answers: q.answers.map((a, j) => (j === aIndex ? { ...a, text: value } : a)),
+            }
+          : q,
+      ),
+    );
+  };
+
+  // Add a new answer
+  const addAnswer = (qIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i === qIndex && q.answers.length < 4
+          ? { ...q, answers: [...q.answers, { id: Date.now(), text: '', correct: false }] }
+          : q,
+      ),
+    );
+  };
+
+  // Remove an answer
+  const removeAnswer = (qIndex: number, aIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i === qIndex ? { ...q, answers: q.answers.filter((_, j) => j !== aIndex) } : q,
+      ),
+    );
+  };
+
+  // Mark one answer as correct (ensures only one correct answer per question)
+  const markCorrect = (qIndex: number, aIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i === qIndex
+          ? {
+              ...q,
+              answers: q.answers.map((a, j) => ({
+                ...a,
+                correct: j === aIndex, // Ensure only one correct answer per question
+              })),
+            }
+          : q,
+      ),
+    );
+  };
+
+  // Add a new question
+  const addQuestion = () => {
+    setQuestions((prev) => [
+      ...prev,
+      { id: Date.now(), text: '', draft: false, answers: [{ id: 1, text: '', correct: false }] },
+    ]);
+  };
+
+  // Remove a question
+  const removeQuestion = (qIndex: number) => {
+    setQuestions((prev) => prev.filter((_, i) => i !== qIndex));
   };
 
   return (
@@ -36,47 +114,172 @@ const CreateQuizPage: React.FC = () => {
         sx={{
           textAlign: 'center',
           margin: '1.5rem auto 3rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
         maxWidth="md"
       >
-        <Box
-          component="form"
-          sx={{
-            width: '300px',
-            maxWidth: '100%',
-            border: '1px solid #dbbb1c',
-            margin: '0 auto',
-            marginBottom: '2rem',
-            borderRadius: '5px',
-            p: 2,
-          }}
-        >
-          <FormControl sx={{ width: '100%' }}>
+        <Box component="form">
+          <Typography variant="h1" sx={{ marginBottom: '2rem' }}>
+            Create a Quiz
+          </Typography>
+
+          <FormControl sx={{ width: '300px', maxWidth: '100%', marginBottom: '1.2rem' }}>
             <TextField
-              label="Quiz title"
+              label="Title"
+              value={questions[0].title}
               onChange={handleTitleChange}
+              placeholder="Awesome Quiz"
               error={false}
               variant="outlined"
-              sx={{
-                marginBottom: '1.2rem',
-              }}
+              required
             />
           </FormControl>
-          <Button onClick={handleQuestions} variant="text" color="primary">
-            Add question
+
+          <Typography variant="h2" sx={{ marginBottom: '2rem' }}>
+            Questions
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '1.5rem',
+              marginBottom: '3.5rem',
+            }}
+          >
+            {questions.map((question, qIndex) => (
+              <Box
+                key={question.id}
+                sx={{
+                  gridColumn: { md: 'span 1', xs: 'span 2' },
+                  width: '100%',
+                  height: '100%',
+                  minHeight: '350px',
+                  borderRadius: 2,
+                  boxShadow: 1,
+                  backgroundColor: 'white',
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <FormControl sx={{ width: '100%' }}>
+                  <TextField
+                    label="Question"
+                    value={question.text}
+                    onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+                    error={false}
+                    variant="outlined"
+                    required
+                  />
+                </FormControl>
+
+                {question.answers.map((answer, aIndex) => (
+                  <Box
+                    key={answer.id}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      gap: 1,
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    <FormControl sx={{ width: '100%' }}>
+                      <TextField
+                        label={`Answer ${aIndex + 1}`}
+                        value={answer.text}
+                        onChange={(e) => handleAnswerChange(qIndex, aIndex, e.target.value)}
+                        required
+                        error={false}
+                        variant="outlined"
+                      />
+                    </FormControl>
+
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '1.5rem',
+                        flexDirection: { sm: 'row', xs: 'column' },
+                        gap: { sm: '0', xs: '1rem' },
+                      }}
+                    >
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={answer.correct}
+                              onChange={() => markCorrect(qIndex, aIndex)}
+                            />
+                          }
+                          label="Correct"
+                        />
+                      </FormGroup>
+                      <Button
+                        onClick={() => removeAnswer(qIndex, aIndex)}
+                        variant="text"
+                        color="error"
+                        disabled={question.answers.length <= 1}
+                      >
+                        Remove answer
+                      </Button>
+                    </Box>
+                  </Box>
+                ))}
+
+                <Button
+                  onClick={() => addAnswer(qIndex)}
+                  sx={{ width: '100%', marginBottom: '1rem' }}
+                  variant="outlined"
+                  color="secondary"
+                  disabled={question.answers.length >= 4}
+                >
+                  Add Answer
+                </Button>
+
+                <Button
+                  onClick={() => removeQuestion(qIndex)}
+                  sx={{ width: '100%' }}
+                  variant="text"
+                  color="error"
+                  disabled={questions.length <= 1}
+                >
+                  Remove Question
+                </Button>
+              </Box>
+            ))}
+
+            <Box
+              sx={{
+                gridColumn: { md: 'span 1', xs: 'span 2' },
+                width: '100%',
+                height: '100%',
+                minHeight: '350px',
+                borderRadius: 2,
+                boxShadow: 1,
+                backgroundColor: 'white',
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Button
+                sx={{ width: '100%' }}
+                onClick={addQuestion}
+                variant="outlined"
+                color="primary"
+              >
+                Add question
+              </Button>
+            </Box>
+          </Box>
+          <Button type="submit" variant="text" color="primary">
+            Submit
           </Button>
         </Box>
-        <List>
-          <Typography variant="h1">{title}</Typography>
-
-          {questions.map((question, index) => (
-            <ListItem key={index}>{question}</ListItem>
-          ))}
-        </List>
       </Container>
     </Layout>
   );
