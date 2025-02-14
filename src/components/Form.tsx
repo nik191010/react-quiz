@@ -29,24 +29,25 @@ const Form: React.FC = () => {
       sx={{
         width: '300px',
         maxWidth: '100%',
-        border: '1px solid #dbbb1c',
+        border: (theme) => `1px solid ${theme.palette.secondary.main}`,
         margin: '0 auto',
-        marginBottom: '2rem',
         borderRadius: '5px',
       }}
     >
-      <form>
-        <Box sx={{ padding: '20px' }}>
-          <Typography variant="h2" sx={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-            Form
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0 1.2rem' }}>
-            <FormControl sx={{ width: '100%' }}>
-              <TextField label="Text Input" helperText="A helpful text" variant="outlined" />
-            </FormControl>
-            <FormControl sx={{ width: '100%' }}>
-              <TextField label="Number Input" type="number" variant="outlined" />
-            </FormControl>
+      <Box component="form">
+        <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '1rem 0' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1.2rem 0' }}>
+            <Typography variant="h2" sx={{ textAlign: 'left' }}>
+              Form
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1.2rem 0' }}>
+              <FormControl sx={{ width: '100%' }}>
+                <TextField label="Text Input" helperText="A helpful text" variant="outlined" />
+              </FormControl>
+              <FormControl sx={{ width: '100%' }}>
+                <TextField label="Number Input" type="number" variant="outlined" />
+              </FormControl>
+            </Box>
           </Box>
           <FormGroup>
             <FormLabel sx={{ textAlign: 'left', fontSize: '1.2rem' }}>Checkbox buttons</FormLabel>
@@ -74,11 +75,13 @@ const Form: React.FC = () => {
               </Select>
             </FormControl>
           </Box>
-          <Button variant="text" color="primary" type="submit">
-            Submit
-          </Button>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <Button variant="text" color="primary" type="submit">
+              Submit
+            </Button>
+          </Box>
         </Box>
-      </form>
+      </Box>
     </Box>
   );
 };

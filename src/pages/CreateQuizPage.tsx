@@ -1,305 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Container,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
-
-interface Answer {
-  id: number;
-  text: string;
-  correct: boolean;
-}
-
-interface Question {
-  title?: string;
-  id: number;
-  text: string;
-  draft: boolean;
-  answers: Answer[];
-}
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 const CreateQuizPage: React.FC = () => {
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      title: '',
-      id: Date.now(),
-      text: '',
-      draft: false,
-      answers: [{ id: 1, text: '', correct: false }],
-    },
-  ]);
-  const [items, setItems] = useState([]);
+  const [quizTitle, setQuizTitle] = useState<string>('');
+  const [question, setQuestion] = useState<string>('');
+  const [questions, setQuestions] = useState<string[]>(['My Question']);
 
-  useEffect(() => {
-    const storedItems = JSON.parse(localStorage.getItem('questions') as string);
-    setItems(storedItems);
-    console.log(items, storedItems);
-  }, []);
-
-  // Handle quiz title change
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuestions(
-      (prev) => prev.map((q) => ({ ...q, title: e.target.value })), // Use event.target.checked
-    );
-  };
-
-  // Handle question text change
-  const handleQuestionChange = (qIndex: number, value: string) => {
-    setQuestions((prev) => prev.map((q, i) => (i === qIndex ? { ...q, text: value } : q)));
-  };
-
-  // Handle answer text change
-  const handleAnswerChange = (qIndex: number, aIndex: number, value: string) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
-        i === qIndex
-          ? {
-              ...q,
-              answers: q.answers.map((a, j) => (j === aIndex ? { ...a, text: value } : a)),
-            }
-          : q,
-      ),
-    );
-  };
-
-  // Add a new answer
-  const addAnswer = (qIndex: number) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
-        i === qIndex && q.answers.length < 4
-          ? { ...q, answers: [...q.answers, { id: Date.now(), text: '', correct: false }] }
-          : q,
-      ),
-    );
-  };
-
-  // Remove an answer
-  const removeAnswer = (qIndex: number, aIndex: number) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
-        i === qIndex ? { ...q, answers: q.answers.filter((_, j) => j !== aIndex) } : q,
-      ),
-    );
-  };
-
-  // Mark one answer as correct (ensures only one correct answer per question)
-  const markCorrect = (qIndex: number, aIndex: number) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
-        i === qIndex
-          ? {
-              ...q,
-              answers: q.answers.map((a, j) => ({
-                ...a,
-                correct: j === aIndex, // Ensure only one correct answer per question
-              })),
-            }
-          : q,
-      ),
-    );
-  };
-
-  // Add a new question
-  const addQuestion = () => {
-    setQuestions((prev) => [
-      ...prev,
-      { id: Date.now(), text: '', draft: false, answers: [{ id: 1, text: '', correct: false }] },
-    ]);
-  };
-
-  // Remove a question
-  const removeQuestion = (qIndex: number) => {
-    setQuestions((prev) => prev.filter((_, i) => i !== qIndex));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // const quizData = {
-    //   title: quizTitle,
-    //   questions: questions,
-    // };
-
-    if (Object.keys(questions).length !== 0) {
-      // localStorage.setItem('quizTitle', quizTitle);
-      localStorage.setItem('questions', JSON.stringify(questions));
-      console.log('Quiz saved to localStorage:', { questions });
-    }
+  const addQuestions = () => {
+    setQuestions((items) => [...(items ?? []), question]);
   };
 
   return (
     <Layout>
-      <Container
-        sx={{
-          textAlign: 'center',
-        }}
-        maxWidth="md"
-      >
+      <Container sx={{ textAlign: 'center' }} maxWidth="md">
         <Box
-          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem 0' }}
+          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem 0' }}
           component="form"
-          onSubmit={handleSubmit}
         >
-          <Typography variant="h1">Create a Quiz</Typography>
-
           <FormControl sx={{ width: '300px', maxWidth: '100%' }}>
             <TextField
               label="Title"
-              value={questions[0].title}
-              onChange={handleTitleChange}
+              value={quizTitle}
+              onChange={(e) => setQuizTitle(e.target.value)}
               placeholder="Awesome Quiz"
               variant="outlined"
               required
             />
           </FormControl>
-
-          <Typography variant="h2">Questions</Typography>
-
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '2rem',
-            }}
-          >
-            {questions.map((question, qIndex) => (
-              <Box
-                key={question.id}
-                sx={{
-                  gridColumn: { md: 'span 1', xs: 'span 2' },
-                  width: '100%',
-                  height: '100%',
-                  minHeight: '350px',
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  backgroundColor: 'white',
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                }}
-              >
-                <FormControl sx={{ width: '100%' }}>
-                  <TextField
-                    label="Question"
-                    value={question.text}
-                    onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                    variant="outlined"
-                    required
-                  />
-                </FormControl>
-
-                {question.answers.map((answer, aIndex) => (
-                  <Box
-                    key={answer.id}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      gap: '2rem',
-                    }}
-                  >
-                    <FormControl sx={{ width: '100%' }}>
-                      <TextField
-                        label={`Answer ${aIndex + 1}`}
-                        value={answer.text}
-                        onChange={(e) => handleAnswerChange(qIndex, aIndex, e.target.value)}
-                        required
-                        variant="outlined"
-                      />
-                    </FormControl>
-
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: { sm: 'row', xs: 'column' },
-                        gap: { sm: '0', xs: '1rem' },
-                      }}
-                    >
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={answer.correct}
-                              onChange={() => markCorrect(qIndex, aIndex)}
-                            />
-                          }
-                          label="Correct"
-                        />
-                      </FormGroup>
-                      <Button
-                        onClick={() => removeAnswer(qIndex, aIndex)}
-                        variant="text"
-                        color="error"
-                        disabled={question.answers.length <= 1}
-                      >
-                        Remove answer
-                      </Button>
-                    </Box>
-                  </Box>
-                ))}
-
-                <Button
-                  onClick={() => addAnswer(qIndex)}
-                  sx={{ width: '100%' }}
-                  variant="outlined"
-                  color="secondary"
-                  disabled={question.answers.length >= 4}
-                >
-                  Add Answer
-                </Button>
-
-                <Button
-                  onClick={() => removeQuestion(qIndex)}
-                  sx={{ width: '100%' }}
-                  variant="text"
-                  color="error"
-                  disabled={questions.length <= 1}
-                >
-                  Remove Question
-                </Button>
-              </Box>
+          <FormControl sx={{ width: '300px', maxWidth: '100%' }}>
+            <TextField
+              label="Question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Awesome Quiz"
+              variant="outlined"
+              required
+            />
+          </FormControl>
+          <Button onClick={addQuestions}>Add question</Button>
+          <List>
+            {questions?.map((item) => (
+              <ListItem>
+                <ListItemText
+                  primary={<Typography variant="body1">{`${quizTitle} - ${item}`}</Typography>}
+                />
+              </ListItem>
             ))}
-
-            <Box
-              sx={{
-                gridColumn: { md: 'span 1', xs: 'span 2' },
-                width: '100%',
-                height: '100%',
-                minHeight: '350px',
-                borderRadius: 2,
-                boxShadow: 1,
-                backgroundColor: 'white',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Button
-                sx={{ width: '100%' }}
-                onClick={addQuestion}
-                variant="outlined"
-                color="primary"
-              >
-                Add question
-              </Button>
-            </Box>
-          </Box>
-          <Button type="submit" variant="text" color="primary">
-            Submit
-          </Button>
+          </List>
         </Box>
       </Container>
     </Layout>

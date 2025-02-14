@@ -7,7 +7,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 
 const Footer: React.FC = () => {
   return (
-    <Box component="footer" sx={{ bgcolor: '#333', py: 4, mt: 'auto' }}>
+    <Box component="footer" sx={{ bgcolor: '#333', py: 4 }}>
       <Container
         maxWidth="md"
         sx={{
@@ -20,12 +20,12 @@ const Footer: React.FC = () => {
           <QuizIcon sx={{ color: '#fff', fontSize: '1.7rem' }} />
         </Link>
         <Typography
-          sx={{ display: 'flex', gap: '0 5px' }}
+          sx={{ display: 'flex', gap: '0 0.5rem' }}
           variant="body1"
           color="#fff"
           align="center"
         >
-          <Link component={RouterLink} to="/" color="inherit" sx={{}}>
+          <Link component={RouterLink} to="/" color="inherit">
             <Box component="span">© QuizApp,</Box>
           </Link>
           {new Date().getFullYear()}

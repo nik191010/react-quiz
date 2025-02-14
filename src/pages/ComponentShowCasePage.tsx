@@ -11,7 +11,11 @@ const ComponentShowCasePage: React.FC = () => {
         <Container maxWidth="md">
           <Box
             sx={{
-              margin: '3rem 0',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: '2rem 0',
+              width: '100%',
             }}
           >
             <Box
@@ -86,36 +90,34 @@ const ComponentShowCasePage: React.FC = () => {
                 </Button>
               </Box>
             </Box>
-          </Box>
 
-          <Form />
+            <Form />
 
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="outlined"
-              component={RouterLink}
-              to="/"
-              sx={{
-                backgroundColor: 'transparent',
-                border: (theme) => `1px solid ${theme.palette.primary.main}`,
-                color: (theme) => theme.palette.primary.main,
-                padding: '7px 0',
-                textTransform: 'none',
-                fontSize: '1.4rem',
-                fontWeight: 'bold',
-                width: '220px',
-                maxWidth: '100%',
-                marginRight: '20px',
-                marginBottom: '1rem',
-                transition: 'all .5s ease',
-                '&:hover': {
-                  backgroundColor: (theme) => theme.palette.primary.main,
-                  color: '#fff',
-                },
-              }}
-            >
-              Home
-            </Button>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant="outlined"
+                component={RouterLink}
+                to="/"
+                sx={{
+                  backgroundColor: 'transparent',
+                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                  color: (theme) => theme.palette.primary.main,
+                  padding: '7px 0',
+                  textTransform: 'none',
+                  fontSize: '1.4rem',
+                  fontWeight: 'bold',
+                  width: '220px',
+                  maxWidth: '100%',
+                  transition: 'all .5s ease',
+                  '&:hover': {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    color: '#fff',
+                  },
+                }}
+              >
+                Home
+              </Button>
+            </Box>
           </Box>
         </Container>
       </Layout>
