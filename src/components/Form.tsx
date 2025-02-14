@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 const Form: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('option1'); // Default value with type
+  const [selectedOption, setSelectedOption] = useState('option1');
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedOption(event.target.value);
@@ -40,58 +40,40 @@ const Form: React.FC = () => {
           <Typography variant="h2" sx={{ marginBottom: '1.5rem', textAlign: 'left' }}>
             Form
           </Typography>
-          <FormControl sx={{ width: '100%' }}>
-            <TextField
-              label="Text Input"
-              helperText="A helpful text"
-              error={false}
-              variant="outlined"
-              sx={{
-                marginBottom: '1.2rem',
-              }}
-            />
-          </FormControl>
-          <FormControl sx={{ width: '100%' }}>
-            <TextField
-              label="Number Input"
-              type="number"
-              // helperText="Enter a number"
-              error={false}
-              variant="outlined"
-              // defaultValue={0}
-              sx={{
-                marginBottom: '1.2rem',
-              }}
-            />
-          </FormControl>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0 1.2rem' }}>
+            <FormControl sx={{ width: '100%' }}>
+              <TextField label="Text Input" helperText="A helpful text" variant="outlined" />
+            </FormControl>
+            <FormControl sx={{ width: '100%' }}>
+              <TextField label="Number Input" type="number" variant="outlined" />
+            </FormControl>
+          </Box>
           <FormGroup>
             <FormLabel sx={{ textAlign: 'left', fontSize: '1.2rem' }}>Checkbox buttons</FormLabel>
             <FormControlLabel control={<Checkbox />} label="Option 1" />
             <FormControlLabel control={<Checkbox />} label="Option 2" />
           </FormGroup>
-          <RadioGroup sx={{ marginBottom: '1rem' }}>
-            <FormLabel>Radio buttons</FormLabel>
-            <FormControlLabel value="option1" control={<Radio />} label="Radio 1" />
-            <FormControlLabel value="option2" control={<Radio />} label="Radio 2" />
-          </RadioGroup>
-          <FormControl
-            sx={{
-              marginBottom: '1rem',
-            }}
-          >
-            <InputLabel
-              sx={{
-                fontSize: '1.2rem',
-                color: '#000',
-              }}
-            >
-              Select
-            </InputLabel>
-            <Select value={selectedOption} onChange={handleChange}>
-              <MenuItem value="option1">Option 1</MenuItem>
-              <MenuItem value="option2">Option 2</MenuItem>
-            </Select>
-          </FormControl>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem 0' }}>
+            <RadioGroup>
+              <FormLabel>Radio buttons</FormLabel>
+              <FormControlLabel value="option1" control={<Radio />} label="Radio 1" />
+              <FormControlLabel value="option2" control={<Radio />} label="Radio 2" />
+            </RadioGroup>
+            <FormControl>
+              <InputLabel
+                sx={{
+                  fontSize: '1.2rem',
+                  color: '#000',
+                }}
+              >
+                Select
+              </InputLabel>
+              <Select value={selectedOption} onChange={handleChange}>
+                <MenuItem value="option1">Option 1</MenuItem>
+                <MenuItem value="option2">Option 2</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Button variant="text" color="primary" type="submit">
             Submit
           </Button>

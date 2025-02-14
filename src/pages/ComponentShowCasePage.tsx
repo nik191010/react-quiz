@@ -1,4 +1,4 @@
-import { Container, Typography, Grid2, Button, Box } from '@mui/material';
+import { Container, Typography, Button, Box } from '@mui/material';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Form from '../components/Form';
@@ -8,12 +8,24 @@ const ComponentShowCasePage: React.FC = () => {
   return (
     <>
       <Layout>
-        <Container sx={{ textAlign: 'center' }} maxWidth="md">
-          <Box sx={{ margin: '40px 0' }}>
-            <Grid2 container spacing={2} sx={{ width: '100%' }}>
-              <Grid2
-                size={{ xs: 12 }}
+        <Container maxWidth="md">
+          <Box
+            sx={{
+              margin: '3rem 0',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: '2rem 0',
+                width: '100%',
+              }}
+            >
+              <Box
                 sx={{
+                  xs: 12,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
@@ -34,10 +46,15 @@ const ComponentShowCasePage: React.FC = () => {
                 <Typography variant="body1">Primary body text</Typography>
                 <Typography variant="body2">Secondary body text</Typography>
                 <Typography variant="caption">Tertiary body text</Typography>
-              </Grid2>
-              <Grid2
-                size={{ xs: 12 }}
-                sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.2rem' }}
+              </Box>
+              <Box
+                sx={{
+                  xs: 12,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  gap: '1.2rem',
+                }}
               >
                 <Button variant="text" color="primary">
                   Primary button
@@ -48,10 +65,15 @@ const ComponentShowCasePage: React.FC = () => {
                 <Button variant="text" color="error">
                   Danger Button
                 </Button>
-              </Grid2>
-              <Grid2
-                size={{ xs: 12 }}
-                sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.2rem' }}
+              </Box>
+              <Box
+                sx={{
+                  xs: 12,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  gap: '1.2rem',
+                }}
               >
                 <Button variant="outlined" color="primary">
                   Primary Outline
@@ -62,37 +84,39 @@ const ComponentShowCasePage: React.FC = () => {
                 <Button variant="outlined" color="error">
                   Error Outline
                 </Button>
-              </Grid2>
-            </Grid2>
+              </Box>
+            </Box>
           </Box>
 
           <Form />
 
-          <Button
-            variant="outlined"
-            component={RouterLink}
-            to="/"
-            sx={{
-              backgroundColor: 'transparent',
-              border: '1px solid #5E35B2',
-              color: '#5E35B2',
-              padding: '7px 0',
-              textTransform: 'none',
-              fontSize: '1.4rem',
-              fontWeight: 'bold',
-              width: '220px',
-              maxWidth: '100%',
-              marginRight: '20px',
-              marginBottom: '1rem',
-              transition: 'all .5s ease',
-              '&:hover': {
-                backgroundColor: '#5E35B2',
-                color: '#fff',
-              },
-            }}
-          >
-            Home
-          </Button>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="outlined"
+              component={RouterLink}
+              to="/"
+              sx={{
+                backgroundColor: 'transparent',
+                border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                color: (theme) => theme.palette.primary.main,
+                padding: '7px 0',
+                textTransform: 'none',
+                fontSize: '1.4rem',
+                fontWeight: 'bold',
+                width: '220px',
+                maxWidth: '100%',
+                marginRight: '20px',
+                marginBottom: '1rem',
+                transition: 'all .5s ease',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: '#fff',
+                },
+              }}
+            >
+              Home
+            </Button>
+          </Box>
         </Container>
       </Layout>
     </>

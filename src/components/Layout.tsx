@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Footer from './Footer';
-import Navbar from './Navbar';
+import Navbar from './Navbar/Navbar';
 import { Box, CssBaseline } from '@mui/material';
 
 interface LayoutProps {
@@ -15,13 +15,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          gap: '2rem 0',
           minHeight: '100vh',
         }}
       >
         <Navbar />
         <Box
           component="main"
-          sx={{ flex: 1, display: 'flex', flexDirection: 'column', pt: '74px' }}
+          sx={{ flex: 1, display: 'flex', flexDirection: 'column', pt: '8rem' }}
         >
           {children}
         </Box>

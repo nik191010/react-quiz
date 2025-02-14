@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Box,
@@ -27,10 +27,22 @@ interface Question {
 }
 
 const CreateQuizPage: React.FC = () => {
-  // const [quizTitle, setQuizTitle] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([
-    { title: '', id: 1, text: '', draft: false, answers: [{ id: 1, text: '', correct: false }] },
+    {
+      title: '',
+      id: Date.now(),
+      text: '',
+      draft: false,
+      answers: [{ id: 1, text: '', correct: false }],
+    },
   ]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem('questions') as string);
+    setItems(storedItems);
+    console.log(items, storedItems);
+  }, []);
 
   // Handle quiz title change
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,42 +120,54 @@ const CreateQuizPage: React.FC = () => {
     setQuestions((prev) => prev.filter((_, i) => i !== qIndex));
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // const quizData = {
+    //   title: quizTitle,
+    //   questions: questions,
+    // };
+
+    if (Object.keys(questions).length !== 0) {
+      // localStorage.setItem('quizTitle', quizTitle);
+      localStorage.setItem('questions', JSON.stringify(questions));
+      console.log('Quiz saved to localStorage:', { questions });
+    }
+  };
+
   return (
     <Layout>
       <Container
         sx={{
           textAlign: 'center',
-          margin: '1.5rem auto 3rem',
         }}
         maxWidth="md"
       >
-        <Box component="form">
-          <Typography variant="h1" sx={{ marginBottom: '2rem' }}>
-            Create a Quiz
-          </Typography>
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem 0' }}
+          component="form"
+          onSubmit={handleSubmit}
+        >
+          <Typography variant="h1">Create a Quiz</Typography>
 
-          <FormControl sx={{ width: '300px', maxWidth: '100%', marginBottom: '1.2rem' }}>
+          <FormControl sx={{ width: '300px', maxWidth: '100%' }}>
             <TextField
               label="Title"
               value={questions[0].title}
               onChange={handleTitleChange}
               placeholder="Awesome Quiz"
-              error={false}
               variant="outlined"
               required
             />
           </FormControl>
 
-          <Typography variant="h2" sx={{ marginBottom: '2rem' }}>
-            Questions
-          </Typography>
+          <Typography variant="h2">Questions</Typography>
 
           <Box
             sx={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '1.5rem',
-              marginBottom: '3.5rem',
+              gap: '2rem',
             }}
           >
             {questions.map((question, qIndex) => (
@@ -160,6 +184,7 @@ const CreateQuizPage: React.FC = () => {
                   p: 2,
                   display: 'flex',
                   flexDirection: 'column',
+                  gap: '1rem',
                 }}
               >
                 <FormControl sx={{ width: '100%' }}>
@@ -167,7 +192,6 @@ const CreateQuizPage: React.FC = () => {
                     label="Question"
                     value={question.text}
                     onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                    error={false}
                     variant="outlined"
                     required
                   />
@@ -180,8 +204,7 @@ const CreateQuizPage: React.FC = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      gap: 1,
-                      marginBottom: '1rem',
+                      gap: '2rem',
                     }}
                   >
                     <FormControl sx={{ width: '100%' }}>
@@ -190,7 +213,6 @@ const CreateQuizPage: React.FC = () => {
                         value={answer.text}
                         onChange={(e) => handleAnswerChange(qIndex, aIndex, e.target.value)}
                         required
-                        error={false}
                         variant="outlined"
                       />
                     </FormControl>
@@ -200,7 +222,6 @@ const CreateQuizPage: React.FC = () => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginBottom: '1.5rem',
                         flexDirection: { sm: 'row', xs: 'column' },
                         gap: { sm: '0', xs: '1rem' },
                       }}
@@ -230,7 +251,7 @@ const CreateQuizPage: React.FC = () => {
 
                 <Button
                   onClick={() => addAnswer(qIndex)}
-                  sx={{ width: '100%', marginBottom: '1rem' }}
+                  sx={{ width: '100%' }}
                   variant="outlined"
                   color="secondary"
                   disabled={question.answers.length >= 4}

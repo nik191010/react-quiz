@@ -181,7 +181,7 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          marginBottom: '1.2rem',
+          // marginBottom: '1.2rem',
           width: '100%',
         },
         // helperText: {
@@ -238,7 +238,7 @@ const theme = createTheme({
         root: {
           width: '100%',
           textAlign: 'left',
-          marginBottom: '1rem',
+          // marginBottom: '1rem',
         },
       },
     },
@@ -260,11 +260,22 @@ const theme = createTheme({
         root: {
           width: '100%',
           textAlign: 'left',
-          marginBottom: '1rem',
+          // marginBottom: '1rem',
         },
         outlined: {
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#dbbb1c',
+          },
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: 'none',
+          transition: 'all 0.5s ease',
+          '&:hover': {
+            color: '#dbbb1c',
           },
         },
       },

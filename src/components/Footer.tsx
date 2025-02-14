@@ -19,22 +19,15 @@ const Footer: React.FC = () => {
         <Link component={RouterLink} to="/">
           <QuizIcon sx={{ color: '#fff', fontSize: '1.7rem' }} />
         </Link>
-        <Typography variant="body1" color="#fff" align="center">
-          <Link
-            component={RouterLink}
-            to="/"
-            color="inherit"
-            sx={{
-              marginRight: '5px',
-              textDecoration: 'none',
-              '&:hover': {
-                color: '#3498db',
-                transition: 'all .5s ease',
-              },
-            }}
-          >
-            © QuizApp,
-          </Link>{' '}
+        <Typography
+          sx={{ display: 'flex', gap: '0 5px' }}
+          variant="body1"
+          color="#fff"
+          align="center"
+        >
+          <Link component={RouterLink} to="/" color="inherit" sx={{}}>
+            <Box component="span">© QuizApp,</Box>
+          </Link>
           {new Date().getFullYear()}
         </Typography>
       </Container>
