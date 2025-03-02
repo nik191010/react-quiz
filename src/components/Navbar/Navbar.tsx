@@ -35,7 +35,7 @@ import {
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = (): void => {
     setMobileOpen(!mobileOpen);
   };
 

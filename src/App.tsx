@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import Home from './pages/Home';
 import ComponentShowCasePage from './pages/ComponentShowCasePage';
-import CreateQuizPage from './pages/CreateQuizPage';
+import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
 
 const App: React.FC = () => (
   <ThemeProvider theme={theme}>

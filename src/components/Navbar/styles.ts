@@ -39,10 +39,9 @@ export const iconButton: SxProps<Theme> = {
 };
 
 export const list: SxProps<Theme> = {
-  marginTop: '30px',
   display: 'flex',
   flexDirection: 'column',
-  gap: '15px 0',
+  gap: '1.5rem 0',
 };
 
 export const listItemButton: SxProps<Theme> = {
