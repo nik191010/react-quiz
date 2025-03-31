@@ -12,7 +12,9 @@ const App: React.FC = () => (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/components" element={<ComponentShowCasePage />} />
-        <Route path="/create" element={<CreateQuizPage />} />
+        <Route path="/create" element={<CreateQuizPage />}>
+          <Route path=":quizId" element={<CreateQuizPage />} />
+        </Route>
       </Routes>
     </Router>
   </ThemeProvider>
