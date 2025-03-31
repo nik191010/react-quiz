@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -23,79 +24,82 @@ import {
   newQuestion,
 } from './styles';
 
-interface Answer {
-  id: number;
-  text: string;
-  correct: boolean;
-}
-
-interface Question {
-  id: number;
-  text: string;
-  answers: Answer[];
-}
-
-interface Quiz {
-  title: string;
-  questions: Question[];
-}
+import { Question, Quiz } from '../Home';
 
 const CreateQuizPage: React.FC = () => {
-  const [quiz, setQuiz] = useState<Quiz>({
-    title: '',
-    questions: [
-      {
-        id: Date.now() + Math.floor(Math.random() * 1000),
-        text: '',
-        answers: [{ id: 1, text: '', correct: true }],
-      },
-    ],
-  });
+  const { quizId } = useParams<{ quizId: string }>(); // id of the quiz
+  const storedQuizzes = localStorage.getItem('quizzes'); // getting all quizzes
+  const existingQuizzes: Quiz[] = storedQuizzes ? JSON.parse(storedQuizzes) : []; // if there's something, parse the quizzes
 
-  // Handle quiz title change
+  // const [items, setItems] = useState<Quiz[]>(existingQuizzes);
+  const [draft, setDraft] = useState<boolean>(false); // Saved as draft or not
+  const [questions, setQuestions] = useState<Question[]>([
+    { id: Date.now(), text: '', answers: [{ id: 1, text: '', correct: true }] },
+  ]); // Questions object
+  const [title, setTitle] = useState<string>(''); // Title of the quiz
+
+  // Load quiz if editing
+  useEffect(() => {
+    if (quizId) {
+      // Ok, there's the quiz with the id, get the data and set it to the useStates
+      const foundQuiz = existingQuizzes.find((quiz) => quiz.id.toString() === quizId);
+      if (foundQuiz) {
+        setTitle(foundQuiz.title);
+        setDraft(foundQuiz.draft);
+        setQuestions(foundQuiz.questions);
+      }
+    }
+  }, [quizId]);
+
+  // Handle title change
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuiz({ ...quiz, title: e.target.value });
+    setTitle(e.target.value);
   };
 
-  // Handle question text change
-  const handleQuestionChange = (qIndex: number, value: string) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((question, index) => {
-        if (index === qIndex) {
+  // Handle draft change
+  const handleDraftChange = () => {
+    setDraft((prevDraft) => {
+      const newDraft = !prevDraft;
+      return newDraft;
+    });
+  };
+
+  // Handle question change
+  const handleQuestionChange = (questionIndex: number, value: string) => {
+    setQuestions((prev) =>
+      prev.map((question, i) => {
+        if (i === questionIndex) {
           return { ...question, text: value };
         } else {
           return question;
         }
       }),
-    }));
+    );
   };
 
-  // Handle answer text change
-  const handleAnswerChange = (qIndex: number, aIndex: number, value: string) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((question, index) => {
-        if (index === qIndex) {
+  // Handle answer change
+  const handleAnswerChange = (questionIndex: number, answerIndex: number, value: string) => {
+    setQuestions((prev) =>
+      prev.map((question, index) => {
+        if (index === questionIndex) {
           return {
             ...question,
-            answers: question.answers.map((answer, answerIndex) =>
-              answerIndex === aIndex ? { ...answer, text: value } : answer,
+            answers: question.answers.map((answer, aIndex) =>
+              aIndex === answerIndex ? { ...answer, text: value } : answer,
             ),
           };
         } else {
           return question;
         }
       }),
-    }));
+    );
   };
 
-  // Add a new answer
-  const addAnswer = (qIndex: number) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((question, index) => {
-        if (index === qIndex && question.answers.length < 4) {
+  // Add answer
+  const addAnswer = (questionIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((question, index) => {
+        if (index === questionIndex && question.answers.length < 4) {
           return {
             ...question,
             answers: [...question.answers, { id: Date.now(), text: '', correct: false }],
@@ -104,124 +108,146 @@ const CreateQuizPage: React.FC = () => {
           return question;
         }
       }),
-    }));
+    );
   };
 
-  // Remove an answer
-  const removeAnswer = (qIndex: number, aIndex: number) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((question, index) => {
-        if (index === qIndex) {
-          return { ...question, answers: question.answers.filter((_, j) => j !== aIndex) };
+  // Remove answer
+  const removeAnswer = (questionIndex: number, answerIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((question, index) => {
+        if (index === questionIndex) {
+          return {
+            ...question,
+            answers: question.answers.filter((_, j) => j !== answerIndex),
+          };
         } else {
           return question;
         }
       }),
-    }));
+    );
   };
 
-  // Mark one answer as correct (ensures only one correct answer per question)
-  const markCorrect = (qIndex: number, aIndex: number) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((question, index) => {
-        if (index === qIndex) {
+  // Correct answer
+  const markCorrect = (questionIndex: number, answerIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((question, index) => {
+        if (index === questionIndex) {
           return {
             ...question,
-            answers: question.answers.map((answer, answerIndex) => ({
+            answers: question.answers.map((answer, aIndex) => ({
               ...answer,
-              correct: answerIndex === aIndex,
+              correct: aIndex === answerIndex,
             })),
           };
         } else {
           return question;
         }
       }),
-    }));
+    );
   };
 
-  // Add a new question
+  // Add question
   const addQuestion = () => {
-    setQuiz((prev) => ({
+    setQuestions((prev) => [
       ...prev,
-      questions: [
-        ...prev.questions,
-        { id: Date.now(), text: '', answers: [{ id: Date.now(), text: '', correct: false }] },
-      ],
-    }));
+      { id: Date.now(), text: '', draft: false, answers: [{ id: 1, text: '', correct: true }] },
+    ]);
   };
 
-  // Remove a question
+  // Remove question
   const removeQuestion = (qIndex: number) => {
-    setQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.filter((_, index) => index !== qIndex),
-    }));
+    if (questions.length > 1) {
+      setQuestions((prev) => prev.filter((_, i) => i !== qIndex));
+    }
   };
 
+  // Save to localStorage
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!title.trim()) {
+      alert('Please enter a quiz title');
+      return;
+    }
+
+    const newQuiz: Quiz = {
+      id: quizId ? Number(quizId) : Date.now(),
+      title,
+      draft,
+      questions: questions.map(({ id, text, answers }) => ({ id, text, answers })),
+    };
+
+    let updatedQuizzes;
+    if (quizId) {
+      updatedQuizzes = existingQuizzes.map((quiz) =>
+        quiz.id.toString() === quizId ? newQuiz : quiz,
+      );
+    } else {
+      updatedQuizzes = [...existingQuizzes, newQuiz];
+    }
+
+    localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
+    // setItems(updatedQuizzes);
   };
 
   return (
     <Layout>
       <Container sx={container} maxWidth="md">
         <Box sx={form} component="form" onSubmit={handleSubmit}>
-          <Typography variant="h1">Create a Quiz</Typography>
+          <Typography variant="h1">
+            {quizId ? `Edit Quiz${draft === true ? ' - Draft' : ''}` : 'Create a Quiz'}
+          </Typography>
 
           <FormControl sx={formControl}>
             <TextField
               label="Title"
-              value={quiz.title}
+              value={title}
               onChange={handleTitleChange}
-              placeholder="Awesome Quiz"
               variant="outlined"
               required
             />
           </FormControl>
 
           <Typography variant="h2">Questions</Typography>
-
           <Box sx={boxGrid}>
-            {quiz.questions.map((question, qIndex) => (
+            {questions.map((question, questionIndex) => (
               <Box key={question.id} sx={boxQuestion}>
                 <FormControl sx={fullWidth}>
                   <TextField
                     label="Question"
                     value={question.text}
-                    onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+                    onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
                     variant="outlined"
                     required
                   />
                 </FormControl>
 
-                {question.answers.map((answer, aIndex) => (
+                {question.answers.map((answer, answerIndex) => (
                   <Box key={answer.id} sx={boxAnswers}>
                     <FormControl sx={fullWidth}>
                       <TextField
-                        label={`Answer ${aIndex + 1}`}
+                        label={`Answer ${answerIndex + 1}`}
                         value={answer.text}
-                        onChange={(e) => handleAnswerChange(qIndex, aIndex, e.target.value)}
+                        onChange={(e) =>
+                          handleAnswerChange(questionIndex, answerIndex, e.target.value)
+                        }
                         required
                         variant="outlined"
                       />
                     </FormControl>
-
                     <Box sx={boxCheckbox}>
                       <FormGroup>
                         <FormControlLabel
                           control={
                             <Checkbox
                               checked={answer.correct}
-                              onChange={() => markCorrect(qIndex, aIndex)}
+                              onChange={() => markCorrect(questionIndex, answerIndex)}
                             />
                           }
                           label="Correct"
                         />
                       </FormGroup>
                       <Button
-                        onClick={() => removeAnswer(qIndex, aIndex)}
+                        onClick={() => removeAnswer(questionIndex, answerIndex)}
                         variant="text"
                         color="error"
                         disabled={question.answers.length <= 1}
@@ -233,7 +259,7 @@ const CreateQuizPage: React.FC = () => {
                 ))}
 
                 <Button
-                  onClick={() => addAnswer(qIndex)}
+                  onClick={() => addAnswer(questionIndex)}
                   sx={fullWidth}
                   variant="outlined"
                   color="secondary"
@@ -241,19 +267,17 @@ const CreateQuizPage: React.FC = () => {
                 >
                   Add Answer
                 </Button>
-
                 <Button
-                  onClick={() => removeQuestion(qIndex)}
+                  onClick={() => removeQuestion(questionIndex)}
                   sx={fullWidth}
                   variant="text"
                   color="error"
-                  disabled={quiz.questions.length <= 1}
+                  disabled={questions.length <= 1}
                 >
                   Remove Question
                 </Button>
               </Box>
             ))}
-
             <Box sx={newQuestion}>
               <Button sx={fullWidth} onClick={addQuestion} variant="outlined" color="primary">
                 Add question
@@ -261,8 +285,17 @@ const CreateQuizPage: React.FC = () => {
             </Box>
           </Box>
 
+          <Box>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox checked={draft} onChange={handleDraftChange} />}
+                label="Save as draft"
+              />
+            </FormGroup>
+          </Box>
+
           <Button type="submit" variant="text" color="primary">
-            Submit
+            {quizId ? 'Update Quiz' : 'Submit'}
           </Button>
         </Box>
       </Container>
