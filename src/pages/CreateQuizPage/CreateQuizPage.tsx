@@ -1,42 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import {
-  Container,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Snackbar } from '@mui/material';
 import Layout from '../../components/Layout';
-import {
-  boxAnswers,
-  boxCheckbox,
-  boxGrid,
-  boxQuestion,
-  container,
-  form,
-  formControl,
-  fullWidth,
-  newQuestion,
-} from './styles';
 
 import { Question, Quiz } from '../Home';
+import QuizForm from '../../components/QuizForm/QuizForm';
+
+const defaultQuestion = {
+  id: Date.now(),
+  text: '',
+  answers: [{ id: 1, text: '', correct: true }],
+};
 
 const CreateQuizPage: React.FC = () => {
+  const navigate = useNavigate();
   const { quizId } = useParams<{ quizId: string }>(); // id of the quiz
   const storedQuizzes = localStorage.getItem('quizzes'); // getting all quizzes
   const existingQuizzes: Quiz[] = storedQuizzes ? JSON.parse(storedQuizzes) : []; // if there's something, parse the quizzes
 
   // const [items, setItems] = useState<Quiz[]>(existingQuizzes);
   const [draft, setDraft] = useState<boolean>(false); // Saved as draft or not
-  const [questions, setQuestions] = useState<Question[]>([
-    { id: Date.now(), text: '', answers: [{ id: 1, text: '', correct: true }] },
-  ]); // Questions object
+
+  const [questions, setQuestions] = useState<Question[]>([defaultQuestion]); // Questions object
   const [title, setTitle] = useState<string>(''); // Title of the quiz
+  const [open, setOpen] = useState<boolean>(false);
+
+  // Mui notification message
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setOpen(false);
+  };
 
   // Load quiz if editing
   useEffect(() => {
@@ -189,116 +182,51 @@ const CreateQuizPage: React.FC = () => {
     // setItems(updatedQuizzes);
   };
 
+  // Remove quiz
+  const removeQuiz = () => {
+    // Set the default object, clear the title and draft
+    setQuestions([defaultQuestion]);
+    setTitle('');
+    setDraft(false);
+
+    // Save other quizzes without the current one
+    const updatedQuizzes = existingQuizzes.filter((quiz) => quiz.id.toString() !== quizId);
+    localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
+
+    // Open the notification window and redirect the user to the 'create' page
+    setOpen(true);
+    setTimeout(() => {
+      navigate('/create');
+    }, 1500);
+  };
+
   return (
     <Layout>
-      <Container sx={container} maxWidth="md">
-        <Box sx={form} component="form" onSubmit={handleSubmit}>
-          <Typography variant="h1">
-            {quizId ? `Edit Quiz${draft === true ? ' - Draft' : ''}` : 'Create a Quiz'}
-          </Typography>
-
-          <FormControl sx={formControl}>
-            <TextField
-              label="Title"
-              value={title}
-              onChange={handleTitleChange}
-              variant="outlined"
-              required
-            />
-          </FormControl>
-
-          <Typography variant="h2">Questions</Typography>
-          <Box sx={boxGrid}>
-            {questions.map((question, questionIndex) => (
-              <Box key={question.id} sx={boxQuestion}>
-                <FormControl sx={fullWidth}>
-                  <TextField
-                    label="Question"
-                    value={question.text}
-                    onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
-                    variant="outlined"
-                    required
-                  />
-                </FormControl>
-
-                {question.answers.map((answer, answerIndex) => (
-                  <Box key={answer.id} sx={boxAnswers}>
-                    <FormControl sx={fullWidth}>
-                      <TextField
-                        label={`Answer ${answerIndex + 1}`}
-                        value={answer.text}
-                        onChange={(e) =>
-                          handleAnswerChange(questionIndex, answerIndex, e.target.value)
-                        }
-                        required
-                        variant="outlined"
-                      />
-                    </FormControl>
-                    <Box sx={boxCheckbox}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={answer.correct}
-                              onChange={() => markCorrect(questionIndex, answerIndex)}
-                            />
-                          }
-                          label="Correct"
-                        />
-                      </FormGroup>
-                      <Button
-                        onClick={() => removeAnswer(questionIndex, answerIndex)}
-                        variant="text"
-                        color="error"
-                        disabled={question.answers.length <= 1}
-                      >
-                        Remove answer
-                      </Button>
-                    </Box>
-                  </Box>
-                ))}
-
-                <Button
-                  onClick={() => addAnswer(questionIndex)}
-                  sx={fullWidth}
-                  variant="outlined"
-                  color="secondary"
-                  disabled={question.answers.length >= 4}
-                >
-                  Add Answer
-                </Button>
-                <Button
-                  onClick={() => removeQuestion(questionIndex)}
-                  sx={fullWidth}
-                  variant="text"
-                  color="error"
-                  disabled={questions.length <= 1}
-                >
-                  Remove Question
-                </Button>
-              </Box>
-            ))}
-            <Box sx={newQuestion}>
-              <Button sx={fullWidth} onClick={addQuestion} variant="outlined" color="primary">
-                Add question
-              </Button>
-            </Box>
-          </Box>
-
-          <Box>
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={draft} onChange={handleDraftChange} />}
-                label="Save as draft"
-              />
-            </FormGroup>
-          </Box>
-
-          <Button type="submit" variant="text" color="primary">
-            {quizId ? 'Update Quiz' : 'Submit'}
-          </Button>
-        </Box>
-      </Container>
+      <QuizForm
+        quizId={quizId}
+        title={title}
+        handleTitleChange={handleTitleChange}
+        draft={draft}
+        handleDraftChange={handleDraftChange}
+        questions={questions}
+        handleQuestionChange={handleQuestionChange}
+        handleAnswerChange={handleAnswerChange}
+        markCorrect={markCorrect}
+        addAnswer={addAnswer}
+        removeAnswer={removeAnswer}
+        addQuestion={addQuestion}
+        removeQuestion={removeQuestion}
+        handleSubmit={handleSubmit}
+        removeQuiz={removeQuiz}
+      />
+      <Snackbar
+        sx={{ '& .MuiPaper-root': { backgroundColor: 'green', color: 'white' } }}
+        open={open}
+        onClose={handleClose}
+        message="The quiz has been deleted"
+        autoHideDuration={1200}
+        key="snackbar"
+      />
     </Layout>
   );
 };
