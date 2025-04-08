@@ -5,18 +5,21 @@ import theme from './theme';
 import Home from './pages/Home';
 import ComponentShowCasePage from './pages/ComponentShowCasePage';
 import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
+import { SnackBarProvider } from './hooks/SnackBarContext';
 
 const App: React.FC = () => (
   <ThemeProvider theme={theme}>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/components" element={<ComponentShowCasePage />} />
-        <Route path="/create" element={<CreateQuizPage />}>
-          <Route path=":quizId" element={<CreateQuizPage />} />
-        </Route>
-      </Routes>
-    </Router>
+    <SnackBarProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/components" element={<ComponentShowCasePage />} />
+          <Route path="/create" element={<CreateQuizPage />}>
+            <Route path=":quizId" element={<CreateQuizPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </SnackBarProvider>
   </ThemeProvider>
 );
 
