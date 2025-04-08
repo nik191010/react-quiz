@@ -1,50 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Container, List, ListItem, Snackbar, Typography } from '@mui/material';
+import { Box, Button, Container, List, ListItem, Typography } from '@mui/material';
 import Layout from '../components/Layout';
 
 import Link from '@mui/material/Link';
 import theme from '../theme';
+import { Quiz } from '../types';
+import useQuizStorage from '../hooks/useQuizStorage';
 
-export interface Answer {
-  correct: boolean;
-  id: number;
-  text: string;
-}
-export interface Question {
-  id: number;
-  text: string;
-  answers: Answer[];
-}
-
-export interface Quiz {
-  id: number;
-  title: string;
-  draft: boolean;
-  questions: Question[];
-}
 
 const Home: React.FC = () => {
-  // Getting a list of saved quizzes from localStorage
-  const storedQuizzes = localStorage.getItem('quizzes');
-  const existingQuizzes: Quiz[] = storedQuizzes ? JSON.parse(storedQuizzes) : [];
-  const [quizzes, setQuizzes] = useState<Quiz[]>(existingQuizzes);
-  const [open, setOpen] = useState<boolean>(false);
+  const { quizzes, removeQuiz } = useQuizStorage();
 
-  // Remove quiz
-  const removeQuiz = (currentQuizId: number) => {
-    // Save other quizzes without the current one and open the notification message
-    const updatedQuizzes = existingQuizzes.filter((quiz) => quiz.id !== currentQuizId);
-    localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
-    setQuizzes(updatedQuizzes);
-    setOpen(true);
-  };
-
-  // Mui notification message
-  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return;
-    setOpen(false);
-  };
   return (
     <>
       <Layout>
@@ -108,14 +75,6 @@ const Home: React.FC = () => {
             </Box>
           </Box>
         </Container>
-        <Snackbar
-          sx={{ '& .MuiPaper-root': { backgroundColor: 'green', color: 'white' } }}
-          open={open}
-          onClose={handleClose}
-          message="The quiz has been deleted"
-          autoHideDuration={1500}
-          key="snackbar"
-        />
       </Layout>
     </>
   );
