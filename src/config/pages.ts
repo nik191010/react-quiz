@@ -6,7 +6,7 @@ interface Pages {
 const pages: Pages[] = [
   { name: 'Home', link: '/' },
   { name: 'Create Quiz', link: '/create' },
-  { name: 'Play Quiz', link: '/play' },
+  { name: 'Play Quiz', link: '/play_main' },
 ];
 
 export default pages;

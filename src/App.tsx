@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import ComponentShowCasePage from './pages/ComponentShowCasePage';
 import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
 import { SnackBarProvider } from './hooks/SnackBarContext';
+import PlayMain from './pages/PlayMain';
+import PlayQuiz from './pages/PlayQuiz';
 
 const App: React.FC = () => (
   <ThemeProvider theme={theme}>
@@ -13,6 +15,10 @@ const App: React.FC = () => (
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/play_main" element={<PlayMain />} />
+          <Route path="/play_quiz" element={<PlayQuiz />}>
+            <Route path=":quizId" element={<PlayQuiz />} />
+          </Route>
           <Route path="/components" element={<ComponentShowCasePage />} />
           <Route path="/create" element={<CreateQuizPage />}>
             <Route path=":quizId" element={<CreateQuizPage />} />
