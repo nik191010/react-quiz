@@ -3,34 +3,15 @@ import { Box, Button, FormControl, TextField } from '@mui/material';
 import AnswerInputRow from './AnswerInputRow';
 import React, { FC } from 'react';
 import { Question } from '../../../types';
-
+import { useQuizFormContext } from './QuizFormContext';
 
 interface QuestionInputProps {
-  handleAnswerChange: (questionIndex: number, answerIndex: number, value: string) => void;
-  handleQuestionChange: (questionIndex: number, value: string) => void;
   questionIndex: number;
-  markCorrect: (questionIndex: number, answerIndex: number) => void;
   question: Question;
-  removeAnswer: (questionIndex: number, answerIndex: number) => void;
-  addAnswer: (questionIndex: number) => void;
-  removeQuestion: (questionIndex: number) => void;
-  questions: Question[];
 }
 
-const QuestionInputCard: FC<QuestionInputProps> = ({
-  questionIndex,
-  question,
-  removeAnswer,
-  handleAnswerChange,
-  markCorrect,
-  handleQuestionChange,
-  addAnswer,
-  questions,
-  removeQuestion,
-}) => {
-  // Can't do this:
-  // const { quizId } = useParams<{ quizId: string }>();
-  // const { removeQuestion } = useQuizForm(quizId ? parseInt(quizId) : Date.now());
+const QuestionInputCard: FC<QuestionInputProps> = ({ questionIndex, question }) => {
+  const { questions, removeQuestion, handleQuestionChange, addAnswer } = useQuizFormContext();
   return (
     <Box key={question.id} sx={boxQuestion}>
       <FormControl sx={fullWidth}>
@@ -48,11 +29,8 @@ const QuestionInputCard: FC<QuestionInputProps> = ({
           key={answerIndex}
           answer={answer}
           answerIndex={answerIndex}
-          handleAnswerChange={handleAnswerChange}
           questionIndex={questionIndex}
-          removeAnswer={removeAnswer}
           question={question}
-          markCorrect={markCorrect}
         />
       ))}
 

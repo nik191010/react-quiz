@@ -10,26 +10,17 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import { Answer, Question } from '../../../types';
+import { useQuizFormContext } from './QuizFormContext';
 
 interface AnswerInputProps {
   answer: Answer;
   answerIndex: number;
-  handleAnswerChange: (questionIndex: number, answerIndex: number, value: string) => void;
   questionIndex: number;
-  markCorrect: (questionIndex: number, answerIndex: number) => void;
   question: Question;
-  removeAnswer: (questionIndex: number, answerIndex: number) => void;
 }
 
-const AnswerInputRow: FC<AnswerInputProps> = ({
-  answer,
-  answerIndex,
-  handleAnswerChange,
-  questionIndex,
-  markCorrect,
-  question,
-  removeAnswer,
-}) => {
+const AnswerInputRow: FC<AnswerInputProps> = ({ answer, answerIndex, questionIndex, question }) => {
+  const { handleAnswerChange, markCorrect, removeAnswer } = useQuizFormContext();
   return (
     <Box key={answer.id} sx={boxAnswers}>
       <FormControl sx={fullWidth}>

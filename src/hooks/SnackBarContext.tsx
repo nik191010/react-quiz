@@ -26,7 +26,7 @@ export const SnackBarProvider: FC<{ children: React.ReactNode }> = ({ children }
   };
 
   return (
-    <SnackBarContext.Provider value={{ addMessage, message }}>
+    <SnackBarContext value={{ addMessage, message }}>
       {children}
       <Snackbar
         open={!!message}
@@ -37,7 +37,7 @@ export const SnackBarProvider: FC<{ children: React.ReactNode }> = ({ children }
           {message?.text}
         </Alert>
       </Snackbar>
-    </SnackBarContext.Provider>
+    </SnackBarContext>
   );
 };
 
