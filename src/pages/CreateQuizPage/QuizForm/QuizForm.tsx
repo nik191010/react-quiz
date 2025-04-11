@@ -13,15 +13,13 @@ import {
 
 import {
   boxGrid,
-  boxQuestion,
   container,
   form,
   formControl,
   fullWidth,
   newQuestion,
 } from './styles';
-import { useQuizForm } from './useQuizForm';
-import AnswerInputRow from './AnswerInputRow';
+import { useQuizFormContext } from './QuizFormContext';
 import QuestionInputCard from './QuestionInputCard';
 
 interface QuizFormProps {
@@ -36,15 +34,9 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId }) => {
     questions,
     handleTitleChange,
     title,
-    handleAnswerChange,
-    addAnswer,
     draft,
     handleDraftChange,
-    markCorrect,
-    removeQuestion,
-    removeAnswer,
-    handleQuestionChange,
-  } = useQuizForm(quizId ? parseInt(quizId) : Date.now());
+  } = useQuizFormContext();
   return (
     <Container sx={container} maxWidth="md">
       <Box sx={form} component="form" onSubmit={handleSubmit}>
@@ -65,15 +57,8 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId }) => {
           {questions.map((question, questionIndex) => (
             <QuestionInputCard
               key={questionIndex}
-              handleAnswerChange={handleAnswerChange}
-              handleQuestionChange={handleQuestionChange}
               questionIndex={questionIndex}
-              markCorrect={markCorrect}
               question={question}
-              removeAnswer={removeAnswer}
-              addAnswer={addAnswer}
-              removeQuestion={removeQuestion}
-              questions={questions}
             />
           ))}
           <Box sx={newQuestion}>
