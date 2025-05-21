@@ -1,14 +1,29 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import { Box, Button, Container, List, ListItem, Typography } from '@mui/material';
+import { Box, Button, Container, List, ListItem, Tooltip, Typography } from '@mui/material';
 import { Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { Quiz } from '../types';
 import useQuizStorage from '../hooks/useQuizStorage';
 
 const PlayMain: React.FC = () => {
-  const { quizzes } = useQuizStorage();
+  const { quizzes, saveQuizProgress } = useQuizStorage();
+
+  const deleteTheProgress = (quizId: number) => {
+    const currentQuiz = quizzes.find((item: Quiz) => item.id === Number(quizId));
+    if (window.confirm('Are you sure you want to delete all progress?')) {
+      if (currentQuiz) {
+        const updatedQuiz = {
+          ...currentQuiz,
+          currentStep: 0,
+          correctAnswers: 0,
+        };
+        saveQuizProgress(updatedQuiz);
+      }
+    }
+  };
 
   return (
     <Layout>
@@ -34,7 +49,7 @@ const PlayMain: React.FC = () => {
                   .filter((quiz: Quiz) => quiz.draft === false)
                   .map((quiz: Quiz) => (
                     <ListItem
-                      sx={{ padding: 0, display: 'flex', alignItems: 'flex-start', gap: '.5rem' }}
+                      sx={{ padding: 0, display: 'flex', alignItems: 'center', gap: '1rem' }}
                       key={quiz.id}
                     >
                       <Link component={RouterLink} to={`/play_quiz/${quiz.id}`}>
@@ -43,6 +58,19 @@ const PlayMain: React.FC = () => {
                         </Box>
                       </Link>
                       <Typography>Questions: {quiz.questions.length}</Typography>
+                      <Tooltip title="Delete all progress">
+                        <RemoveCircleIcon
+                          onClick={() => deleteTheProgress(quiz.id)}
+                          sx={{
+                            color: (theme) => theme.palette.error.main,
+                            transition: 'all .5s ease',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              opacity: '.7',
+                            },
+                          }}
+                        />
+                      </Tooltip>
                     </ListItem>
                   ))
               ) : (

@@ -1,4 +1,3 @@
-
 export interface Answer {
   correct: boolean;
   id: number;
@@ -15,4 +14,6 @@ export interface Quiz {
   title: string;
   draft: boolean;
   questions: Question[];
+  currentStep?: number; // progress tracking current question index
+  correctAnswers?: number;
 }

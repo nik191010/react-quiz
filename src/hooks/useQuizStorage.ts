@@ -24,6 +24,15 @@ export const useQuizStorage = () => {
     addMessage({ text: 'The quiz has been saved', severity: 'success' });
   };
 
+  const saveQuizProgress = (newQuiz: Quiz) => {
+    const existingQuiz = quizzes.find((quiz) => quiz.id === newQuiz.id);
+    const updatedQuizzes = existingQuiz
+      ? quizzes.map((quiz) => (quiz.id === newQuiz.id ? newQuiz : quiz))
+      : [...quizzes, newQuiz];
+    localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
+    setQuizzes(updatedQuizzes);
+  };
+
   const removeQuiz = (currentQuizId: number) => {
     const updatedQuizzes = quizzes.filter((quiz) => quiz.id !== currentQuizId);
     localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
@@ -38,7 +47,7 @@ export const useQuizStorage = () => {
     }
     return quiz;
   };
-  return { quizzes, setQuizzes, removeQuiz, addOrUpdateQuiz, getQuizOr404 };
+  return { quizzes, setQuizzes, removeQuiz, addOrUpdateQuiz, saveQuizProgress, getQuizOr404 };
 };
 
 export default useQuizStorage;
